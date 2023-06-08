@@ -46,3 +46,39 @@ int queue_int_get(queue_int *q) {
     q->begin = (q->begin + 1) % q->capacity;
     return q->data[q->begin];
 }
+
+int queue_int_maxget(queue_int *q) {
+    // gets the maximum value in the queue
+    int max = q->data[q->begin];
+    for (int i = 0; i < q->size; i++) {
+        int index = (q->begin + i) % q->capacity;
+        if (q->data[index] > max) {
+            max = q->data[index];
+        }
+    }
+    // and removes it from the queue
+    for (int i = 0; i < q->size; i++) {
+        int index = (q->begin + i) % q->capacity;
+        if (q->data[index] == max) {
+            q->data[index] = q->data[q->begin];
+            q->data[q->begin] = max;
+            break;
+        }
+    }
+    return queue_int_get(q);
+}
+
+int main(void) {
+    // test queue_int_maxget
+    queue_int *q = queue_int_new(5);
+    queue_int_put(q, 1);
+    queue_int_put(q, 2);
+    queue_int_put(q, 3);
+    queue_int_put(q, 4);
+    queue_int_put(q, 5);
+    printf("%d\n", queue_int_maxget(q));
+    printf("%d\n", queue_int_maxget(q));
+    printf("%d\n", queue_int_maxget(q));
+    printf("%d\n", queue_int_maxget(q));
+    printf("%d\n", queue_int_maxget(q));
+}
