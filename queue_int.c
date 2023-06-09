@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "queue_int.h"
 
@@ -49,23 +50,19 @@ int queue_int_get(queue_int *q) {
 
 int queue_int_maxget(queue_int *q) {
     // gets the maximum value in the queue
+    // and removes it from the queue
     int max = q->data[q->begin];
+    int max_index = q->begin;
     for (int i = 0; i < q->size; i++) {
         int index = (q->begin + i) % q->capacity;
         if (q->data[index] > max) {
             max = q->data[index];
+            max_index = index;
         }
     }
-    // and removes it from the queue
-    for (int i = 0; i < q->size; i++) {
-        int index = (q->begin + i) % q->capacity;
-        if (q->data[index] == max) {
-            q->data[index] = q->data[q->begin];
-            q->data[q->begin] = max;
-            break;
-        }
-    }
-    return queue_int_get(q);
+    q->size--;
+    q->begin = (q->begin + 1) % q->capacity;
+    return max;
 }
 
 int main(void) {
